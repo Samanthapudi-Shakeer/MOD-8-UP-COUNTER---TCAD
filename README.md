@@ -1,7 +1,7 @@
 # Mod-8-Up-Counter---TinkerCAD
 # Functionality:
 ## This document explains the Arduino code for simulating a mod8 up counter using the digitalWrite function.
-
+https://github.com/Samanthapudi-Shakeer/Mod-8-Up-Counter---TinkerCAD/blob/main/Copy%20of%20Lesson%201%20-%20Blinking%20LED.png
 Counts from 0 to 7 in a loop.
 Outputs the counter value on three digital pins.
 Resets to 0 when the count reaches 8 (mod8 behavior).
