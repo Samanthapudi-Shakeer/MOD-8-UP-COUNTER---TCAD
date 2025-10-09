@@ -1,36 +1,64 @@
-# Mod-8-Up-Counter---TinkerCAD
-# Functionality:
-## This document explains the Arduino code for simulating a mod8 up counter using the digitalWrite function.
-![Copy of Lesson 1 - Blinking LED](https://github.com/Samanthapudi-Shakeer/Mod-8-Up-Counter---TinkerCAD/blob/main/Copy%20of%20Lesson%201%20-%20Blinking%20LED.png)
-Counts from 0 to 7 in a loop.
-Outputs the counter value on three digital pins.
-Resets to 0 when the count reaches 8 (mod8 behavior).
-# Hardware Requirements:
+# Project Plan Templates Platform
 
-Three D Flip-flops or JK Flip-flops (connected as a 3-bit counter)
-Resistors (values depend on the specific flip-flops used)
-Breadboard and jumper wires
-LEDs (optional, for visualization) - Each LED cathode (negative terminal) goes to a resistor, and the anode (positive terminal) goes to a corresponding flip-flop output (Q).
-# Software:
+This repository now contains a Django-based web application for managing complex project plan templates across multiple sections (M1–M13). The platform supports role-based access (viewer/editor), dynamic table interactions, and AJAX-driven updates for rapid data entry.
 
-This code assumes you have the hardware components connected correctly. It generates clock pulses and sets up feedback connections within the flip-flops to achieve the counting behavior.
+## Features
 
-# Code Breakdown:
+- **Authentication & Roles** – Uses Django authentication with viewer/editor permissions enforced per project membership.
+- **Project Scoping** – Users only see projects they are assigned to through `ProjectMembership` records.
+- **Comprehensive Data Model** – Implements all section models (revision history, resources, quality, risk, supplier management, etc.) linked to projects.
+- **Dynamic UI** – Bootstrap 5 + DataTables powered interface with accordion navigation, inline modal editing, search, sort, and pagination.
+- **AJAX CRUD** – All table operations load lazily via JSON endpoints and support create/update/delete without page reloads.
+- **Caching** – Frequently accessed table payloads are cached using Django’s cache framework.
 
-## Pin Definitions:
-CLOCK_PIN: Pin connected to the clock input of the first flip-flop.
-Q0_PIN, Q1_PIN, Q2_PIN: Pins connected to the outputs (Q) of the three flip-flops.
-setup Function:
-Configures CLOCK_PIN and output pins (Q0_PIN, Q1_PIN, Q2_PIN) as outputs for the clock and counter outputs, respectively.
-loop Function:
-Generates a short clock pulse using digitalWrite to trigger the flip-flops.
-The actual counter logic is implemented through the hardware connections themselves (no code required in the loop). The feedback connections between the flip-flops ensure proper counting behavior.
-Optional: LEDs for Visualization:
+## Getting Started
 
-Connect LEDs (with resistors) to the output pins (Q0_PIN, Q1_PIN, Q2_PIN) to visualize the binary representation of the counter value. The LED will be lit when the corresponding flip-flop output is HIGH.
+> **Note:** The execution environment used to author this code does not have external network access, so dependency installation commands could not be executed. Run the following steps locally after cloning the repository.
 
-Important Notes:
+1. **Create a virtual environment and install requirements**
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # Windows: .venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
 
-Ensure the flip-flops and resistors are connected as described for a 3-bit counter with proper feedback connections. Consult the datasheets of your specific flip-flops for details.
-Adjust the delayMicroseconds value in the code (if used) based on your clock requirements and flip-flop characteristics.
-Consider using pull-up or pull-down resistors on the data inputs of the flip-flops if required by their datasheets.
+2. **Apply migrations**
+   ```bash
+   python manage.py makemigrations accounts plans
+   python manage.py migrate
+   ```
+
+3. **Create a superuser and sample data**
+   ```bash
+   python manage.py createsuperuser
+   ```
+   Then use the Django admin to create projects and assign memberships. Editor permissions can be toggled via `ProjectMembership.can_edit` or by setting the user profile role to `editor`.
+
+4. **Run the development server**
+   ```bash
+   python manage.py runserver
+   ```
+   Visit `http://127.0.0.1:8000/` and log in with your credentials.
+
+## Project Structure
+
+- `config/` – Django project configuration and settings.
+- `accounts/` – User profile model and authentication URL wiring.
+- `plans/` – Core app containing models for each project plan section, service layer helpers, registry metadata, and views.
+- `templates/` – Bootstrap-based templates for authentication and plan management.
+- `static/` – Compiled JavaScript and CSS for the interactive dashboard experience.
+
+## Development Notes
+
+- The section registry (`plans/section_registry.py`) centralises metadata for tables, enabling generic CRUD endpoints and pre-populated deliverable lists.
+- AJAX views live in `plans/views.py` and expose JSON payloads consumed by `static/js/app.js` for inline editing and DataTable rendering.
+- File and image uploads are represented via `FileField` definitions. Configure media storage if uploads are required in production.
+- Because package installation could not be verified in the authoring environment, ensure Django 4.2+ is installed locally before running management commands.
+
+## Next Steps
+
+- Add automated tests once migrations are generated.
+- Configure deployment settings (ALLOWED_HOSTS, database, static/media storage) for production use.
+- Extend `static/js/app.js` with richer inline editing (e.g., field type detection from server metadata).
+
+Enjoy building and tracking your project plans!
