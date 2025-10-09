@@ -26,6 +26,12 @@
           <td>{{ project.updated_at|date:"M d, Y" }}</td>
           <td class="text-end"><a class="btn btn-sm btn-outline-primary" href="{% url 'plans:project-detail' project.pk %}">View</a></td>
         </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div id="projects-empty-state" class="text-center text-muted py-3{% if object_list %} d-none{% endif %}">
+      No projects assigned.
+    </div>
         {% empty %}
         <tr class="table-empty">
           <td class="text-center text-muted">No projects assigned.</td>
@@ -43,6 +49,19 @@
 {% block extra_js %}
 <script>
   $(function(){
+    const table = $('#projects-table').DataTable({
+      columnDefs: [
+        { targets: -1, orderable: false, searchable: false },
+      ],
+      language: {
+        emptyTable: 'No projects assigned.'
+      }
+    });
+    if (table.data().any()) {
+      $('#projects-empty-state').addClass('d-none');
+    } else {
+      $('#projects-empty-state').removeClass('d-none');
+    }
     $('#projects-table').DataTable();
   });
 </script>
