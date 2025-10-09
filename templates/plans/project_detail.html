@@ -1,61 +1,56 @@
 {% extends "base.html" %}
 {% block title %}{{ project.name }}{% endblock %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="d-flex justify-content-between align-items-center mb-3 page-header">
   <div>
-    <h1 class="h3 mb-0">{{ project.name }}</h1>
+    <h1 class="page-title mb-0">{{ project.name }}</h1>
     <p class="text-muted mb-0">{{ project.description|default:"No description available." }}</p>
   </div>
   <div class="text-end">
-    <span class="badge bg-{{ can_edit|yesno:'success,secondary' }}">{{ user_role|title }}</span>
+    <span class="badge {% if can_edit %}badge-success{% else %}badge-secondary{% endif %}">{{ user_role|title }}</span>
   </div>
 </div>
-<div class="row">
-  <div class="col-lg-4">
+<div class="layout">
+  <aside class="layout-sidebar">
     <div class="accordion" id="sectionAccordion">
       {% for section in sections %}
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="heading-{{ section.key }}">
-          <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ section.key }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="collapse-{{ section.key }}">
-            {{ section.title }}
-          </button>
-        </h2>
-        <div id="collapse-{{ section.key }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading-{{ section.key }}" data-bs-parent="#sectionAccordion">
-          <div class="accordion-body p-0">
-            <div class="list-group list-group-flush">
-              {% for table in section.tables %}
-              <button type="button" class="list-group-item list-group-item-action section-trigger" data-table-key="{{ table.key }}" data-section-key="{{ section.key }}" data-title="{{ table.title }}" data-singleton="{{ table.singleton|yesno:'true,false' }}">
-                <div class="d-flex justify-content-between align-items-center">
-                  <span>{{ table.title }}</span>
-                  <span class="badge bg-light text-dark">Load</span>
-                </div>
-              </button>
-              {% endfor %}
-            </div>
+      <div class="accordion-item{% if forloop.first %} is-open{% endif %}">
+        <button class="accordion-button{% if not forloop.first %} collapsed{% endif %}" type="button" data-accordion-toggle="collapse-{{ section.key }}">
+          {{ section.title }}
+          <span class="accordion-indicator"></span>
+        </button>
+        <div id="collapse-{{ section.key }}" class="accordion-panel{% if forloop.first %} is-open{% endif %}">
+          <div class="list-group">
+            {% for table in section.tables %}
+            <button type="button" class="list-group-item list-group-item-action section-trigger" data-table-key="{{ table.key }}" data-section-key="{{ section.key }}" data-title="{{ table.title }}" data-singleton="{{ table.singleton|yesno:'true,false' }}">
+              <span>{{ table.title }}</span>
+              <span class="badge badge-light">Load</span>
+            </button>
+            {% endfor %}
           </div>
         </div>
       </div>
       {% endfor %}
     </div>
-  </div>
-  <div class="col-lg-8">
+  </aside>
+  <section class="layout-content">
     <div id="section-content" class="section-placeholder">
       Select a table to load its data.
     </div>
-  </div>
+  </section>
 </div>
-<div class="modal fade" id="sectionModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+<div class="modal" id="sectionModal" aria-hidden="true">
+  <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="sectionModalLabel">Edit Row</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="modal-close" data-modal-close aria-label="Close">&times;</button>
       </div>
       <div class="modal-body">
         <form id="section-form"></form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-modal-close>Close</button>
         <button type="submit" form="section-form" class="btn btn-primary">Save changes</button>
       </div>
     </div>
