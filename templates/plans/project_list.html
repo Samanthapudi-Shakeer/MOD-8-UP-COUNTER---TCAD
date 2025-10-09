@@ -1,21 +1,21 @@
 {% extends "base.html" %}
 {% block title %}Projects{% endblock %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4 page-header">
-  <h1 class="page-title">Projects</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3">Projects</h1>
   {% if can_edit_global %}
   <a href="#" class="btn btn-primary disabled" aria-disabled="true">Create Project (CLI only)</a>
   {% endif %}
 </div>
 <div class="card section-card">
   <div class="card-body">
-    <table class="table table-striped" id="projects-table" data-simple-table data-empty-target="#projects-empty-state">
+    <table class="table table-striped" id="projects-table">
       <thead>
         <tr>
-          <th data-sortable="true">Name</th>
-          <th data-sortable="true">Description</th>
-          <th data-sortable="true">Updated</th>
-          <th data-sortable="false"></th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Updated</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -24,12 +24,45 @@
           <td>{{ project.name }}</td>
           <td>{{ project.description|default:"—" }}</td>
           <td>{{ project.updated_at|date:"M d, Y" }}</td>
-          <td class="text-end"><a class="btn btn-outline-primary btn-sm" href="{% url 'plans:project-detail' project.pk %}">View</a></td>
+          <td class="text-end"><a class="btn btn-sm btn-outline-primary" href="{% url 'plans:project-detail' project.pk %}">View</a></td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
-    <div id="projects-empty-state" class="empty-state{% if object_list %} d-none{% endif %}">No projects assigned.</div>
+    <div id="projects-empty-state" class="text-center text-muted py-3{% if object_list %} d-none{% endif %}">
+      No projects assigned.
+    </div>
+        {% empty %}
+        <tr class="table-empty">
+          <td class="text-center text-muted">No projects assigned.</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr><td colspan="4" class="text-center text-muted">No projects assigned.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 </div>
+{% endblock %}
+{% block extra_js %}
+<script>
+  $(function(){
+    const table = $('#projects-table').DataTable({
+      columnDefs: [
+        { targets: -1, orderable: false, searchable: false },
+      ],
+      language: {
+        emptyTable: 'No projects assigned.'
+      }
+    });
+    if (table.data().any()) {
+      $('#projects-empty-state').addClass('d-none');
+    } else {
+      $('#projects-empty-state').removeClass('d-none');
+    }
+    $('#projects-table').DataTable();
+  });
+</script>
 {% endblock %}
