@@ -24,6 +24,7 @@ This repository now contains a Django-based web application for managing complex
 
 2. **Apply migrations**
    ```bash
+   python manage.py makemigrations accounts plans
    python manage.py migrate
    ```
 
