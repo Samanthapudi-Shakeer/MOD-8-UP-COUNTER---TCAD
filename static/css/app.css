@@ -1,0 +1,30 @@
+body {
+  background-color: #f5f7fb;
+}
+
+.section-card {
+  margin-bottom: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.5rem 1rem rgba(15, 23, 42, 0.1);
+}
+
+.section-card .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.table-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.table-actions button {
+  min-width: 3rem;
+}
+
+.section-placeholder {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: #6c757d;
+}
