@@ -27,6 +27,12 @@
           <td class="text-end"><a class="btn btn-sm btn-outline-primary" href="{% url 'plans:project-detail' project.pk %}">View</a></td>
         </tr>
         {% empty %}
+        <tr class="table-empty">
+          <td class="text-center text-muted">No projects assigned.</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
         <tr><td colspan="4" class="text-center text-muted">No projects assigned.</td></tr>
         {% endfor %}
       </tbody>
